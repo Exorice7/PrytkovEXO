@@ -1,0 +1,119 @@
+package main
+
+import (
+	"fmt"
+)
+
+// Интерфейс Animal с четырьмя методами
+type Animal interface {
+	Sound() string
+	Move() string
+	Eat() string
+	Sleep() string
+	GetName() string
+}
+
+// Интерфейс Swimmer с методом Swim
+type Swimmer interface {
+	Swim() string
+}
+
+// Структура Lion
+type Lion struct {
+	Name string
+}
+
+func (l Lion) Sound() string   { return "Рррр!" }
+func (l Lion) Move() string    { return "Бежит быстро" }
+func (l Lion) Eat() string     { return "Ест мясо" }
+func (l Lion) Sleep() string   { return "Спит 20 часов" }
+func (l Lion) GetName() string { return l.Name }
+func (l Lion) Hunt() string    { return "Охотится в прайде" }
+
+// Структура Fish
+type Fish struct {
+	Name string
+}
+
+func (f Fish) Sound() string   { return "Булькает" }
+func (f Fish) Move() string    { return "Плавает" }
+func (f Fish) Eat() string     { return "Ест водоросли" }
+func (f Fish) Sleep() string   { return "Спит с закрытыми глазами" }
+func (f Fish) GetName() string { return f.Name }
+func (f Fish) Swim() string    { return "Плавает грациозно" }
+
+// Структура Penguin
+type Penguin struct {
+	Name string
+}
+
+func (p Penguin) Sound() string   { return "Квак" }
+func (p Penguin) Move() string    { return "Ходит на коротких ножках" }
+func (p Penguin) Eat() string     { return "Ест рыбу" }
+func (p Penguin) Sleep() string   { return "Спит на льду" }
+func (p Penguin) GetName() string { return p.Name }
+func (p Penguin) Swim() string    { return "Плавает под водой" }
+
+// Структура Elephant
+type Elephant struct {
+	Name string
+}
+
+func (e Elephant) Sound() string   { return "Пуууу!" }
+func (e Elephant) Move() string    { return "Ходит тяжело" }
+func (e Elephant) Eat() string     { return "Ест листья" }
+func (e Elephant) Sleep() string   { return "Спит 4 часа" }
+func (e Elephant) GetName() string { return e.Name }
+func (e Elephant) Trumpet() string { return "Трубит громко" }
+
+// Структура Tiger
+type Tiger struct {
+	Name string
+}
+
+func (t Tiger) Sound() string   { return "Гррр!" }
+func (t Tiger) Move() string    { return "Бежит молниеносно" }
+func (t Tiger) Eat() string     { return "Ест мясо" }
+func (t Tiger) Sleep() string   { return "Спит 16 часов" }
+func (t Tiger) GetName() string { return t.Name }
+func (t Tiger) Prowl() string   { return "Крадется незаметно" }
+
+func main() {
+	animals := []Animal{
+		Lion{Name: "Лео"},
+		Fish{Name: "Немо"},
+		Penguin{Name: "Пингви"},
+		Elephant{Name: "Элли"},
+		Tiger{Name: "Тигр"},
+	}
+
+	for _, animal := range animals {
+		fmt.Printf("Животное: %s\n", animal.GetName())
+		fmt.Println("Звук:", animal.Sound())
+		fmt.Println("Движение:", animal.Move())
+		fmt.Println("Питание:", animal.Eat())
+		fmt.Println("Сон:", animal.Sleep())
+
+		// Проверка на способность плавать
+		if swimmer, ok := animal.(Swimmer); ok {
+			fmt.Println("Умеет плавать:", swimmer.Swim())
+		} else {
+			fmt.Println("Не умеет плавать")
+		}
+
+		// Вызов специфичного метода
+		switch a := animal.(type) {
+		case Lion:
+			fmt.Println("Специфично:", a.Hunt())
+		case Fish:
+			fmt.Println("Специфично:", a.Swim())
+		case Penguin:
+			fmt.Println("Специфично:", a.Swim())
+		case Elephant:
+			fmt.Println("Специфично:", a.Trumpet())
+		case Tiger:
+			fmt.Println("Специфично:", a.Prowl())
+		}
+		fmt.Println("------------------------")
+	}
+}
