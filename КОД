@@ -1,119 +1,131 @@
+-------------------------Задача 1
+
 package main
 
 import (
-	"fmt"
+ "fmt"
+ "sync"
 )
 
-// Интерфейс Animal с четырьмя методами
-type Animal interface {
-	Sound() string
-	Move() string
-	Eat() string
-	Sleep() string
-	GetName() string
+func square(wg *sync.WaitGroup, num int) {
+ defer wg.Done()
+ fmt.Printf("Square of %d is %d\n", num, num*num)
 }
-
-// Интерфейс Swimmer с методом Swim
-type Swimmer interface {
-	Swim() string
-}
-
-// Структура Lion
-type Lion struct {
-	Name string
-}
-
-func (l Lion) Sound() string   { return "Рррр!" }
-func (l Lion) Move() string    { return "Бежит быстро" }
-func (l Lion) Eat() string     { return "Ест мясо" }
-func (l Lion) Sleep() string   { return "Спит 20 часов" }
-func (l Lion) GetName() string { return l.Name }
-func (l Lion) Hunt() string    { return "Охотится в прайде" }
-
-// Структура Fish
-type Fish struct {
-	Name string
-}
-
-func (f Fish) Sound() string   { return "Булькает" }
-func (f Fish) Move() string    { return "Плавает" }
-func (f Fish) Eat() string     { return "Ест водоросли" }
-func (f Fish) Sleep() string   { return "Спит с закрытыми глазами" }
-func (f Fish) GetName() string { return f.Name }
-func (f Fish) Swim() string    { return "Плавает грациозно" }
-
-// Структура Penguin
-type Penguin struct {
-	Name string
-}
-
-func (p Penguin) Sound() string   { return "Квак" }
-func (p Penguin) Move() string    { return "Ходит на коротких ножках" }
-func (p Penguin) Eat() string     { return "Ест рыбу" }
-func (p Penguin) Sleep() string   { return "Спит на льду" }
-func (p Penguin) GetName() string { return p.Name }
-func (p Penguin) Swim() string    { return "Плавает под водой" }
-
-// Структура Elephant
-type Elephant struct {
-	Name string
-}
-
-func (e Elephant) Sound() string   { return "Пуууу!" }
-func (e Elephant) Move() string    { return "Ходит тяжело" }
-func (e Elephant) Eat() string     { return "Ест листья" }
-func (e Elephant) Sleep() string   { return "Спит 4 часа" }
-func (e Elephant) GetName() string { return e.Name }
-func (e Elephant) Trumpet() string { return "Трубит громко" }
-
-// Структура Tiger
-type Tiger struct {
-	Name string
-}
-
-func (t Tiger) Sound() string   { return "Гррр!" }
-func (t Tiger) Move() string    { return "Бежит молниеносно" }
-func (t Tiger) Eat() string     { return "Ест мясо" }
-func (t Tiger) Sleep() string   { return "Спит 16 часов" }
-func (t Tiger) GetName() string { return t.Name }
-func (t Tiger) Prowl() string   { return "Крадется незаметно" }
 
 func main() {
-	animals := []Animal{
-		Lion{Name: "Лео"},
-		Fish{Name: "Немо"},
-		Penguin{Name: "Пингви"},
-		Elephant{Name: "Элли"},
-		Tiger{Name: "Тигр"},
-	}
+ numbers := []int{2, 4, 6, 8, 10}
+ var wg sync.WaitGroup
 
-	for _, animal := range animals {
-		fmt.Printf("Животное: %s\n", animal.GetName())
-		fmt.Println("Звук:", animal.Sound())
-		fmt.Println("Движение:", animal.Move())
-		fmt.Println("Питание:", animal.Eat())
-		fmt.Println("Сон:", animal.Sleep())
+ for _, num := range numbers {
+  wg.Add(1)
+  go square(&wg, num)
+ }
 
-		// Проверка на способность плавать
-		if swimmer, ok := animal.(Swimmer); ok {
-			fmt.Println("Умеет плавать:", swimmer.Swim())
-		} else {
-			fmt.Println("Не умеет плавать")
-		}
+ wg.Wait()
+}
 
-		// Вызов специфичного метода
-		switch a := animal.(type) {
-		case Lion:
-			fmt.Println("Специфично:", a.Hunt())
-		case Fish:
-			fmt.Println("Специфично:", a.Swim())
-		case Penguin:
-			fmt.Println("Специфично:", a.Swim())
-		case Elephant:
-			fmt.Println("Специфично:", a.Trumpet())
-		case Tiger:
-			fmt.Println("Специфично:", a.Prowl())
-		}
-		fmt.Println("------------------------")
-	}
+------------------------Задача 2
+
+package main
+
+import (
+ "fmt"
+ "math"
+)
+
+func groupTemperatures(temps []float64) map[int][]float64 {
+ groups := make(map[int][]float64)
+
+ for _, temp := range temps {
+  group := int(math.Floor(temp/10.0)) * 10
+  groups[group] = append(groups[group], temp)
+ }
+
+ return groups
+}
+
+func main() {
+ temperatures := []float64{-25.4, -27.0, 13.0, 19.0, 15.5, 24.5, -21.0, 32.5}
+ result := groupTemperatures(temperatures)
+
+ for group, temps := range result {
+  fmt.Printf("%d: %v\n", group, temps)
+ }
+}
+
+
+--------------------Задача 3
+
+package main
+
+import (
+ "fmt"
+)
+
+func reverseString(input string) string {
+ runes := []rune(input)
+ for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+  runes[i], runes[j] = runes[j], runes[i]
+ }
+ return string(runes)
+}
+
+func main() {
+ str := "главрыба"
+ fmt.Println(reverseString(str)) // Output: абырвалг
+}
+
+
+
+-----------------------Задача 4
+
+
+package main
+
+import (
+ "fmt"
+ "strings"
+)
+
+func reverseWords(sentence string) string {
+ words := strings.Fields(sentence)
+ for i, j := 0, len(words)-1; i < j; i, j = i+1, j-1 {
+  words[i], words[j] = words[j], words[i]
+ }
+ return strings.Join(words, " ")
+}
+
+func main() {
+ sentence := "snow dog sun"
+ fmt.Println(reverseWords(sentence)) // Output: sun dog snow
+}
+
+
+
+-----------------------Задача 5
+
+package main
+
+import (
+ "fmt"
+ "strings"
+)
+
+func allUnique(input string) bool {
+ input = strings.ToLower(input)
+ seen := make(map[rune]bool)
+
+ for _, char := range input {
+  if seen[char] {
+   return false
+  }
+  seen[char] = true
+ }
+ return true
+}
+
+func main() {
+ fmt.Println(allUnique("abcd"))        // true
+ fmt.Println(allUnique("abCdefAaf"))   // false
+ fmt.Println(allUnique("aabcd"))       // false
 }
